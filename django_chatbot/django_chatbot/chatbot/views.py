@@ -1,16 +1,15 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
-import openai
+
 
 from django.contrib import auth
 from django.contrib.auth.models import User
-from .models import Chat
+from chatbot.models import Chat
 
 from django.utils import timezone
+from django.core.exceptions import ObjectDoesNotExist
 
 
-openai_api_key = 'input-your-key'
-openai.api_key = openai_api_key
 
 def ask_openai(message):
     response = openai.ChatCompletion.create(
@@ -37,6 +36,9 @@ def chatbot(request):
         return JsonResponse({'message': message, 'response': response})
     return render(request, 'chatbot.html', {'chats': chats})
 
+    try:
+        chats = Chat.objects.filter(user=request.user)
+    except ObjectDoesNotExist:  
 
 def login(request):
     if request.method == 'POST':
