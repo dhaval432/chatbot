@@ -149,7 +149,7 @@
     };
   
 
-  messageForm.addEventListener('submit', async(event) => {
+  messageForm.addEventListener('submit', (event) => {
     event.preventDefault();
 
     const message = messageInput.value.trim();
@@ -172,7 +172,7 @@
 
     messageInput.value = '';
 
-    const response = await getResponse(userMessage);  
+    const response = getResponse(userMessage);  
 
     const chatbotMessageItem = document.createElement('li');
     chatbotMessageItem.classList.add('message', 'received');
