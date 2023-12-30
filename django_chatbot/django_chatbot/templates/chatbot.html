@@ -1,51 +1,218 @@
-
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Chatbot</title>
-</head>
-<body>
-    <h1>Chatbot</h1>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+   
+  </head>
 
-    <div>
-        <ul>
-            {% for chat in chats %}
-                <li>{{ chat.user.username }}: {{ chat.message }}</li>
-                <li>Bot: {{ chat.response }}</li>
-            {% endfor %}
-        </ul>
+<style>
+    body, html {
+      height: 100%;
+      background-color: #1e1e1e; /* Dark background color */
+      color: #ffffff; /* Light text color */
+    }
+
+    .chat-container {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card {
+      flex-grow: 1;
+      background-color: #161616; /* Dark gray card background */
+      color: #ffffff; /* Light text color for card content */
+    }
+
+    .card-header {
+      background-color: #357d4d; /* Darker green for card header */
+    }
+
+    .messages-box {
+      overflow-y: auto;
+    }
+
+    .messages-list {
+      padding: 0;
+      list-style: none;
+    }
+
+    .message {
+      margin-bottom: 15px;
+    }
+
+    .message-text {
+      padding: 10px;
+      border-radius: 5px;
+    }
+
+    .received {
+      background-color: #333333; /* Dark gray for received messages */
+      align-self: flex-start;
+    }
+
+    .message-form {
+      display: flex;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 10px;
+      background-color: #333333; /* Dark gray for message input background */
+    }
+
+    .message-input {
+      flex: 1;
+      border-radius: 0;
+      border-right: none;
+      background-color: #444444; /* Slightly lighter gray for message input */
+      color: #ffffff; /* Light text color for message input */
+    }
+
+    .btn-send {
+      border-radius: 0;
+      background-color: #357d4d; /* Darker green for send button */
+      color: #ffffff; /* Light text color for send button */
+    }
+    .sent {
+    background-color: #357d4d; /* Darker green for sent messages */
+    align-self: flex-end;
+  }
+
+  .received {
+    background-color: #302f2f; /* Dark gray for received messages */
+    align-self: flex-start;
+  }
+
+  .ai-response {
+    background-color: #1a1a1a; /* Darker background for AI responses */
+    align-self: flex-start;
+  }
+  </style>
+
+
+
+
+<div class="chat-container">
+  <div class="card flex-grow-1">
+    <div class="card-header bg-primary text-white">Chat</div>
+    <div class="card-body messages-box">
+      
+      <ul class="list-unstyled messages-list">
+        
+        <li class="message received">
+          <div class="message-text">
+            <div class="message-sender">
+              <b>AI Chatbot</b>
+            </div>
+            <div class="message-content">
+              Hi, I am your AI Chatbot, you can ask me anything.
+            </div>
+          </div>
+        </li>
+      </ul>
+      
     </div>
+    <br><br>
+    <br><br>
+    <br><br>
+  </div>
+  <form class="message-form">
+    
+    <div class="input-group">
+      <input type="text" class="form-control message-input" placeholder="Type your message...">
+      <div class="input-group-append">
+        <button type="submit" class="btn btn-primary btn-send">Send</button>
+      </div>
+    </div>
+  </form>
+</div>
 
-    <form id="chat-form">
-        {% csrf_token %}
-        <input type="text" id="message-input" placeholder="Type your message...">
-        <button type="button" id="send-button">Send</button>
-    </form>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script>
+  const messagesList = document.querySelector('.messages-list');
+  const messageForm = document.querySelector('.message-form');
+  const messageInput = document.querySelector('.message-input');
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const form = document.getElementById('chat-form');
-            const input = document.getElementById('message-input');
-            const sendButton = document.getElementById('send-button');
+  
+  function getResponse(userMessage) {
 
-            sendButton.addEventListener('click', function () {
-                const message = input.value.trim();
-                if (message.length === 0) {
-                    return;
-                }
+    return new Promise(resolve => {
 
-                const chatList = document.querySelector('ul');
-                const listItem = document.createElement('li');
-                listItem.textContent = '{{ user.username }}: ' + message;
-                chatList.appendChild(listItem);
+      resolve({ response: "I'm sorry, I don't understand that question." });
+      }, 1000);
+    };
+  
 
-                // Add AJAX request to Django view for OpenAI response
+  messageForm.addEventListener('submit', async(event) => {
+    event.preventDefault();
 
-                input.value = '';  // Clear input after sending
-            });
-        });
-    </script>
-</body>
+    const message = messageInput.value.trim();
+    if (message.length === 0) {
+      return;
+    }
+
+    const userMessageItem = document.createElement('li');
+    userMessageItem.classList.add('message', 'sent');
+    userMessageItem.innerHTML = `
+        <div class="message-text">
+            <div class="message-sender">
+                <b>You</b>
+            </div>
+            <div class="message-content">
+                ${message}
+            </div>
+        </div>`;
+    messagesList.appendChild(userMessageItem);
+
+    messageInput.value = '';
+
+    const response = await getResponse(userMessage);  
+
+    const chatbotMessageItem = document.createElement('li');
+    chatbotMessageItem.classList.add('message', 'received');
+    chatbotMessageItem.innerHTML = `
+        <div class="message-text">
+            <div class="message-sender">
+                <b>AI Chatbot</b>
+            </div>
+            <div class="message-content">
+                ${response.response}
+            </div>
+        </div>`;
+    messagesList.appendChild(chatbotMessageItem);
+
+    fetch('', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
+        'csrfmiddlewaretoken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+        'message': message
+      })
+    })
+      .then(response => response.json())
+      .then(data => {
+        const response = data.response;
+        const messageItem = document.createElement('li');
+        messageItem.classList.add('message', 'received');
+        messageItem.innerHTML = `
+        <div class="message-text">
+            <div class="message-sender">
+              <b>AI Chatbot</b>
+            </div>
+            <div class="message-content">
+                ${response}
+            </div>
+        </div>
+          `;
+        messagesList.appendChild(messageItem);
+      });
+  });
+
+</script>
 </html>
