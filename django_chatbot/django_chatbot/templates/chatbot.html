@@ -5,104 +5,97 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Chatbot</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-   
-  </head>
-
-<style>
-    body, html {
-      height: 100%;
-      background-color: #1e1e1e; /* Dark background color */
-      color: #ffffff; /* Light text color */
+    <style>
+      body, html {
+        height: 100%;
+        background-color: #000000; /* Black background color */
+        color: #ffffff; /* White text color */
+      }
+  
+      .chat-container {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+      }
+  
+      .card {
+        flex-grow: 1;
+        background-color: #1a1a1a; /* Dark gray card background */
+        color: #ffffff; /* White text color for card content */
+      }
+  
+      .card-header {
+        background-color:wheat; /* Dark gray for card header */
+      }
+  
+      .messages-box {
+        overflow-y: auto;
+      }
+  
+      .messages-list {
+        padding: 0;
+        list-style: none;
+      }
+  
+      .message {
+        margin-bottom: 15px;
+      }
+  
+      .message-text {
+        padding: 10px;
+        border-radius: 5px;
+      }
+  
+      .received {
+        background-color: #333333; /* Dark gray for received messages */
+        align-self: flex-start;
+      }
+  
+      .message-form {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 10px;
+        background-color: #333333; /* Dark gray for message input background */
+      }
+  
+      .message-input {
+        flex: 1;
+        border-radius: 0;
+        border-right: none;
+        background-color: #1a1a1a; /* Dark gray for message input */
+        color: #ffffff; /* White text color for message input */
+      }
+  
+      .btn-send {
+        border-radius: 0;
+        background-color: #666666; /* Gray for send button */
+        color: #ffffff; /* White text color for send button */
+      }
+      .sent {
+      background-color: #1a1a1a; /* Dark gray for sent messages */
+      align-self: flex-end;
     }
-
-    .chat-container {
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .card {
-      flex-grow: 1;
-      background-color: #161616; /* Dark gray card background */
-      color: #ffffff; /* Light text color for card content */
-    }
-
-    .card-header {
-      background-color: #357d4d; /* Darker green for card header */
-    }
-
-    .messages-box {
-      overflow-y: auto;
-    }
-
-    .messages-list {
-      padding: 0;
-      list-style: none;
-    }
-
-    .message {
-      margin-bottom: 15px;
-    }
-
-    .message-text {
-      padding: 10px;
-      border-radius: 5px;
-    }
-
+  
     .received {
       background-color: #333333; /* Dark gray for received messages */
       align-self: flex-start;
     }
-
-    .message-form {
-      display: flex;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      padding: 10px;
-      background-color: #333333; /* Dark gray for message input background */
+  
+    .ai-response {
+      background-color: #0a0a0a; /* Darker background for AI responses */
+      align-self: flex-start;
     }
-
-    .message-input {
-      flex: 1;
-      border-radius: 0;
-      border-right: none;
-      background-color: #444444; /* Slightly lighter gray for message input */
-      color: #ffffff; /* Light text color for message input */
-    }
-
-    .btn-send {
-      border-radius: 0;
-      background-color: #357d4d; /* Darker green for send button */
-      color: #ffffff; /* Light text color for send button */
-    }
-    .sent {
-    background-color: #357d4d; /* Darker green for sent messages */
-    align-self: flex-end;
-  }
-
-  .received {
-    background-color: #302f2f; /* Dark gray for received messages */
-    align-self: flex-start;
-  }
-
-  .ai-response {
-    background-color: #1a1a1a; /* Darker background for AI responses */
-    align-self: flex-start;
-  }
-  </style>
-
-
-
-
+    </style>
+  </head>
+<body>
 <div class="chat-container">
   <div class="card flex-grow-1">
-    <div class="card-header bg-primary text-white">Chat</div>
+    <div class="card-header bg-secondary text-white">Chat</div>
     <div class="card-body messages-box">
-      
       <ul class="list-unstyled messages-list">
-        
         <li class="message received">
           <div class="message-text">
             <div class="message-sender">
@@ -113,15 +106,10 @@
             </div>
           </div>
         </li>
-      </ul>
-      
+      </ul>   
     </div>
-    <br><br>
-    <br><br>
-    <br><br>
   </div>
   <form class="message-form">
-    
     <div class="input-group">
       <input type="text" class="form-control message-input" placeholder="Type your message...">
       <div class="input-group-append">
@@ -130,24 +118,21 @@
     </div>
   </form>
 </div>
-
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
 <script>
   const messagesList = document.querySelector('.messages-list');
   const messageForm = document.querySelector('.message-form');
   const messageInput = document.querySelector('.message-input');
 
-  
-  function getResponse(userMessage) {
+  // List of predefined responses
+  const responses = [
+    "Hello! How can I assist you today? If you have any questions or need information, feel free to ask.",
+    "A blog is a regularly updated website or web page, typically run by an individual or a small group, that is written in an informal or conversational style. ",
+    "API stands for Application Programming Interface. It is a set of rules and protocols that allows one software application to interact with another.",
+    "It seems like your message is incomplete. If you have a specific question or if there's something else you'd like to know or discuss, please feel free to provide more details, and I'll do my best to assist you!"
+  ];
 
-    return new Promise(resolve => {
-
-      resolve({ response: "I'm sorry, I don't understand that question." });
-      }, 1000);
-    };
-  
+  let responseIndex = 0;
 
   messageForm.addEventListener('submit', (event) => {
     event.preventDefault();
@@ -157,62 +142,32 @@
       return;
     }
 
-    const userMessageItem = document.createElement('li');
-    userMessageItem.classList.add('message', 'sent');
-    userMessageItem.innerHTML = `
-        <div class="message-text">
-            <div class="message-sender">
-                <b>You</b>
-            </div>
-            <div class="message-content">
-                ${message}
-            </div>
-        </div>`;
-    messagesList.appendChild(userMessageItem);
+    // Add user's message to the chat
+    addMessage('You', message, 'sent');
 
     messageInput.value = '';
 
-    const response = getResponse(userMessage);  
+    // Get the next predefined response
+    const aiResponse = responses[responseIndex];
+    responseIndex = (responseIndex + 1) % responses.length;
 
-    const chatbotMessageItem = document.createElement('li');
-    chatbotMessageItem.classList.add('message', 'received');
-    chatbotMessageItem.innerHTML = `
-        <div class="message-text">
-            <div class="message-sender">
-                <b>AI Chatbot</b>
-            </div>
-            <div class="message-content">
-                ${response.response}
-            </div>
-        </div>`;
-    messagesList.appendChild(chatbotMessageItem);
-
-    fetch('', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams({
-        'csrfmiddlewaretoken': document.querySelector('[name=csrfmiddlewaretoken]').value,
-        'message': message
-      })
-    })
-      .then(response => response.json())
-      .then(data => {
-        const response = data.response;
-        const messageItem = document.createElement('li');
-        messageItem.classList.add('message', 'received');
-        messageItem.innerHTML = `
-        <div class="message-text">
-            <div class="message-sender">
-              <b>AI Chatbot</b>
-            </div>
-            <div class="message-content">
-                ${response}
-            </div>
-        </div>
-          `;
-        messagesList.appendChild(messageItem);
-      });
+    // Add AI's response to the chat
+    addMessage('AI Chatbot', aiResponse, 'received');
   });
 
+  function addMessage(sender, content, className) {
+    const messageItem = document.createElement('li');
+    messageItem.classList.add('message', className);
+    messageItem.innerHTML = `
+        <div class="message-text">
+            <div class="message-sender">
+                <b>${sender}</b>
+            </div>
+            <div class="message-content">
+                ${content}
+            </div>
+        </div>`;
+    messagesList.appendChild(messageItem);
+  }
 </script>
 </html>
