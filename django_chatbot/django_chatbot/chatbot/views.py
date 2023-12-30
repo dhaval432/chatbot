@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib import messages
+# from django.contrib.auth.forms import UserCreationForm
+# from django.contrib import messages
 from django.contrib import auth
 from django.contrib.auth.models import User
 from chatbot.models import Chat
@@ -29,7 +29,6 @@ def chatbot(request):
         try:
             chats = Chat.objects.filter(user=request.user)
         except ObjectDoesNotExist:
-            # Handle the case when no Chat object is found for the given user
             chats = None
 
         if request.method == 'POST':
@@ -39,12 +38,14 @@ def chatbot(request):
             chat = Chat(user=request.user, message=message, response=response, created_at=timezone.now())
             chat.save()
             return JsonResponse({'message': message, 'response': response})
+
         return render(request, 'chatbot.html', {'chats': chats})
 
-    else:
-         
-        return redirect('login')  
+    # If the user is not authenticated and trying to access the chatbot page, redirect to the login page
+    if request.path == '/chatbot/':
+        return redirect('login')  # Adjust 'login' to your actual login URL
 
+    return redirect('chatbot')
 # def login(request):
 #     if request.method == 'POST':
 #         username = request.POST['username']
