@@ -1,9 +1,11 @@
 from django.urls import path
-from . import views
+# from .views import register
+# from .views import login
 
+from . import views
 urlpatterns = [
     path('', views.chatbot, name='chatbot'),
-    path('login', views.login, name='login'),
-    path('register', views.register, name='register'),
-    path('logout', views.logout, name='logout'),
+    # path('login/', login, name='login'),
+    # path('register/', register, name='register'),
+   
 ]
